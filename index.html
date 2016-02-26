@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>San Francisco Crime Map</title>
+
+    <link href="vendor/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/jQRangeSlider-5.7.2/css/iThing.css" type="text/css" />
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>San Francisco Crime Map</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div id="week_slider"></div>
+                <div id="map"></div>
+                <div id="year_slider"></div>
+            </div>
+
+            <div class="col-md-4">
+                <div id="types"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="vendor/jquery-1.12.1.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
+    <script src="vendor/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script src="vendor/jQRangeSlider-5.7.2/jQRangeSlider-min.js"></script>
+    <script src="vendor/jQRangeSlider-5.7.2/jQDateRangeSlider-min.js"></script>
+    <script src="vendor/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+    <script src="vendor/loading-overlay.min.js"></script>
+    <script src="js/piechart-clusterer.js"></script>
+
+    <script src="js/map.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/loader.js"></script>
+    <script src="js/types.js"></script>
+    <script src="js/init.js"></script>
+</body>
+</html>
