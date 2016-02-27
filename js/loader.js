@@ -4,30 +4,11 @@ var CrimeLoader = (function () {
         this.types = types;
         this.data = {};
         this.geo = {};
+        this.db = new PouchDB('sf-crime');
     }
 
     CrimeLoader.prototype.load = function (query) {
         var self = this;
-
-        var map = {
-            years: {},
-            weeks: {},
-            types: {}
-        };
-
-        $.each(query.years, function (i, year) {
-            map.years[year] = true;
-        });
-
-        $.each(query.weeks, function (i, week) {
-            map.weeks[week] = true;
-        });
-
-        $.each(query.types, function (i, type) {
-            map.types[type] = true;
-        });
-
-        query.map = map;
         this.query = query;
 
         $.each(this.geo, function (year, weeks) {
@@ -40,47 +21,53 @@ var CrimeLoader = (function () {
             });
         });
 
-        $.each(query.years, function (i, year) {
-            $.each(query.weeks, function (j, week) {
-                self.getData(year, week, function (data) {
-                    self.updateGeoObjects(year, week, data);
-                });
+        this.query.eachYearWeek(function (year, week) {
+            self.getData(year, week, function (data) {
+                self.updateGeoObjects(year, week, data);
             });
         });
     };
 
     CrimeLoader.prototype.getData = function (year, week, func) {
         var self = this;
+        var cacheKey = 'y' + year + 'w' + week;
+
         if (this.data[year] && this.data[year][week]) {
             func(this.data[year][week]);
         } else {
-            $.getJSON('dates/' + year + '/' + (week < 10 ? '0' + week : week) + '.json', function (data) {
-                if (!self.data[year]) {
-                    self.data[year] = {};
-                }
+            if ((year < 2003) || (year == 2015 && week < 20) || (year > 2015)) {
+                return;
+            }
 
-                self.data[year][week] = data;
-                func(data);
+            if (!self.data[year]) {
+                self.data[year] = {};
+            }
+
+            this.db.get(cacheKey).then(function (doc) {
+                self.data[year][week] = doc.data;
+                func(doc.data);
+            }).catch(function (err) {
+                $.getJSON('dates/' + year + '/' + (week < 10 ? '0' + week : week) + '.json', function (data) {
+                    self.data[year][week] = data;
+                    func(data);
+
+                    self.db.put({
+                        '_id': cacheKey,
+                        'data': data
+                    });
+                });
             });
         }
     };
 
     CrimeLoader.prototype.updateGeoObjects = function(year, week, data) {
         var self = this;
-        if ($.inArray(year, self.query.years) != -1 && $.inArray(week, self.query.weeks) != -1) {
-            if (self.query.types.length) {
-                $.each(self.query.types, function (i, type) {
-                    if (data[type]) {
-                        var crimes = data[type];
-                        self.processCrimes(year, week, type, crimes);
-                    }
-                });
-            } else {
-                $.each(data, function (type, crimes) {
-                    self.processCrimes(year, week, type, crimes);
-                });
+
+        $.each(self.query.types, function (type) {
+            if (data[type]) {
+                self.processCrimes(year, week, type, data[type]);
             }
-        }
+        });
     };
 
     CrimeLoader.prototype.processCrimes = function (year, week, type, crimes) {
@@ -117,7 +104,7 @@ var CrimeLoader = (function () {
             balloonContent: crime.Descript,
             clusterCaption: type
         }, {
-            preset: crime.color.preset
+            preset: crime.color.c.preset
         });
 
         place.crime = crime;
@@ -126,23 +113,20 @@ var CrimeLoader = (function () {
 
     CrimeLoader.prototype.placeFilterUpdate = function (place) {
         var self = this;
-        var q = this.query.map;
         var crime = place.crime;
 
-        if (q.years[crime.year] && q.weeks[crime.week] && q.types[crime.type]) {
-            if (crime.active) {
-                // nothing
-            } else {
+        if (self.query.isMatch(crime)) {
+            if (!crime.active) {
                 crime.active = true;
                 self.map.add(place);
+
+                if (crime.color.c.preset != place.options.get('preset')) {
+                    place.options.set('preset', crime.color.c.preset);
+                }
             }
-        } else {
-            if (crime.active) {
-                crime.active = false;
-                self.map.del(place);
-            } else {
-                // nothing
-            }
+        } else if (crime.active) {
+            crime.active = false;
+            self.map.del(place);
         }
     };
 

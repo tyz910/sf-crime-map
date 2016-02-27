@@ -171,7 +171,7 @@ ymaps.ready(function () {
                 colour, geoObject;
 
             while(geoObject = geoObjects[--count]) {
-                colour = geoObject.crime.color.web;
+                colour = geoObject.crime.color.c.web;
 
                 countByColour[colour] = countByColour[colour] + 1 || 1;
             }

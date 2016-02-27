@@ -42,7 +42,9 @@ var CrimeTypes = (function () {
 
         this.typeColors = {};
         $.each(types, function (i, type) {
-            self.typeColors[type] = self.colors.black;
+            self.typeColors[type] = {
+                'c': self.colors.black
+            };
         });
 
         this.render(types);
@@ -84,7 +86,7 @@ var CrimeTypes = (function () {
         var checked = chk.prop('checked');
 
         if (!checked && !this.getActiveTypes().length) {
-            color.active = true;
+            color.c.active = true;
             chk.prop('checked', true);
             alert('Min types - 1');
 
@@ -92,13 +94,12 @@ var CrimeTypes = (function () {
         }
 
         if (checked) {
-            if (!color.active) {
-                color.active = true;
+            if (!color.c.active) {
+                color.c.active = true;
             } else {
                 var free = self.getFreeColor();
                 if (free) {
-                    color = free;
-                    self.typeColors[type] = free;
+                    color.c = free;
                     free.active = true;
                 } else {
                     chk.prop('checked', false);
@@ -106,7 +107,7 @@ var CrimeTypes = (function () {
                 }
             }
         } else {
-            color.active = false;
+            color.c.active = false;
         }
 
         if (!notUser) {
@@ -118,7 +119,7 @@ var CrimeTypes = (function () {
 
         var ico = chk.siblings('.glyphicon');
         if (chk.prop('checked')) {
-            ico.css('color', '#' + color.web).show();
+            ico.css('color', '#' + color.c.web).show();
         } else {
             ico.hide();
         }

@@ -61,20 +61,17 @@ var CrimeFilter = (function () {
     }
 
     CrimeFilter.prototype.changed = function () {
-        var query = this.makeQuery();
-        this.loader.load(query, this.map);
+        this.loader.load(this.createQuery(), this.map);
     };
 
-    CrimeFilter.prototype.makeQuery = function () {
-        var query = {
+    CrimeFilter.prototype.createQuery = function () {
+        return new CrimeQuery({
             types: this.types.getActiveTypes(),
             years: this.getYears(),
             hours: [],
             days: [],
             weeks: this.getWeeks()
-        };
-
-        return query;
+        });
     };
 
     CrimeFilter.prototype.getWeeks = function () {
