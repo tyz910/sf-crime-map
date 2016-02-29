@@ -101,7 +101,7 @@ var CrimeLoader = (function () {
         crime.color = this.types.getColor(type);
 
         var place = new ymaps.Placemark([crime.Y, crime.X], {
-            balloonContent: crime.Descript,
+            balloonContent: this.getCrimeDescription(crime),
             clusterCaption: type
         }, {
             preset: crime.color.c.preset
@@ -109,6 +109,17 @@ var CrimeLoader = (function () {
 
         place.crime = crime;
         return place;
+    };
+
+    CrimeLoader.prototype.getCrimeDescription = function (crime) {
+        return crime.Descript + '<br>'
+            + '<small>' + crime.X + ', ' + crime.Y + '</small><br><br>'
+            + '<table class="crime-info">'
+            + '<tr><td>Resolution:</td><td>' + crime.Resolution + '</td></tr>'
+            + '<tr><td>Address:</td><td>' + crime.PdDistrict + ', ' + crime.Address + '</td></tr>'
+            + '<tr><td>Date:</td><td>' + crime.Date + ', ' + crime.DayOfWeek + '</td></tr>'
+            + '</table>'
+        ;
     };
 
     CrimeLoader.prototype.placeFilterUpdate = function (place) {
