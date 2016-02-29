@@ -48,11 +48,8 @@ var CrimeTypes = (function () {
         });
 
         this.render(types);
-        this.toggle('LARCENY/THEFT', true);
-        this.toggle('OTHER OFFENSES', true);
-        this.toggle('NON-CRIMINAL', true);
-        this.toggle('ASSAULT', true);
         this.toggle('DRUG/NARCOTIC', true);
+        this.toggle('VEHICLE THEFT', true);
     }
 
     CrimeTypes.prototype.getColor = function (type) {
