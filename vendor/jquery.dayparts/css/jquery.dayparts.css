@@ -1,0 +1,43 @@
+.dayparts td.cell-label {
+	padding: 3px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.dayparts td.cell-label.day-label,
+.dayparts td.cell-label.hour-label {
+	cursor: pointer;
+	background: #E2F0FF;
+	text-align: right;
+	font-size: 90%;
+}
+
+.dayparts td.cell-label.presets-label {
+	text-align: right;
+	padding: 0 5px;
+	vertical-align: middle;
+}
+
+.dayparts td.dayparts-cell {
+	width: 3.6%;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	line-height: 1px;
+	font-size: 1px;
+	background: #C73535;
+}
+
+.dayparts td.dayparts-cell.hour-active {
+	background: linear-gradient(#A0E674, #77AD3A);
+}
+.dayparts td.dayparts-cell.dragging-active {
+	background: linear-gradient(#D1EAB4, #A7CE7B);
+}
+.dayparts td.dayparts-cell.dragging-inactive {
+	background: #A71515;
+}

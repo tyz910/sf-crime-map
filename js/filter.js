@@ -39,6 +39,21 @@ var CrimeFilter = (function () {
             step: 1
         });
 
+        var allHours = [];
+        for (var day = 0; day < 7; day++){
+            for (var hour = 0; hour < 24; hour++){
+                allHours[allHours.length]={
+                    day: day,
+                    hour: hour
+                };
+            }
+        }
+
+        this.times = $("#time_select").dayparts({
+            showPresets: false,
+            data: allHours
+        });
+
         this.weeks.bind("userValuesChanged", function () {
             self.changed();
         });
@@ -57,6 +72,10 @@ var CrimeFilter = (function () {
             self.changed();
         });
 
+        this.times.on("daypartsUpdate", function() {
+            self.changed();
+        });
+
         self.changed();
     }
 
@@ -68,8 +87,7 @@ var CrimeFilter = (function () {
         return new CrimeQuery({
             types: this.types.getActiveTypes(),
             years: this.getYears(),
-            hours: [],
-            days: [],
+            times: this.getTimes(),
             weeks: this.getWeeks()
         });
     };
@@ -92,6 +110,10 @@ var CrimeFilter = (function () {
         }
 
         return yList;
+    };
+
+    CrimeFilter.prototype.getTimes = function () {
+        return this.times.dayparts.getValue();
     };
 
     return CrimeFilter;
